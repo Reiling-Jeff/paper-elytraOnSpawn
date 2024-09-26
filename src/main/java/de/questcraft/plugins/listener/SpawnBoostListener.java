@@ -14,11 +14,15 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static org.bukkit.Bukkit.getLogger;
 
 public class SpawnBoostListener implements Listener{
 
     private final float flyBoostMultiplier;
     private final int spawnRadius;
+    private final String world;
     private final float startBoostMultiplier;
     private final List<Player> flying = new ArrayList<>();
     private final List<Player> boosted = new ArrayList<>();
@@ -27,23 +31,25 @@ public class SpawnBoostListener implements Listener{
         this.flyBoostMultiplier = plugin.getConfig().getInt("flyBoostMultiplier");
         this.spawnRadius = plugin.getConfig().getInt("spawnRadius");
         this.startBoostMultiplier = plugin.getConfig().getInt("startBoostMultiplier");
+        this.world = plugin.getConfig().getString("world");
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            Bukkit.getWorld("World2").getPlayers().forEach( player -> {
-                if(player.getGameMode() != GameMode.SURVIVAL) return;
-                player.setAllowFlight(isInSpawnRadius(player));
-                if((flying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())
-                    || (isInSpawnRadius(player.getPlayer()) && boosted.contains(player.getPlayer()) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()))
-                {
-                    player.setAllowFlight(false);
-                    player.setFlying(false);
-                    player.setGliding(false);
-                    boosted.remove(player);
-                    Bukkit.getScheduler().runTaskLater(plugin, () ->{
-                        flying.remove(player);
-                    },5);
-                }
-            });
+            if(world != null) {
+                Objects.requireNonNull(Bukkit.getWorld(world)).getPlayers().forEach(player -> {
+                    if (player.getGameMode() != GameMode.SURVIVAL) return;
+                    player.setAllowFlight(isInSpawnRadius(player));
+                    if ((flying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())
+                            || (isInSpawnRadius(player.getPlayer()) && boosted.contains(player.getPlayer()) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())) {
+                        player.setAllowFlight(false);
+                        player.setFlying(false);
+                        player.setGliding(false);
+                        boosted.remove(player);
+                        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                            flying.remove(player);
+                        }, 5);
+                    }
+                });
+            } else getLogger().severe("Please make sure you added the right world name in config.yml. Default: \"world: world\"(you cant add multiple worlds yet)");
         }, 0, 3);
     }
 
@@ -83,9 +89,8 @@ public class SpawnBoostListener implements Listener{
     }
 
 
-
     private boolean isInSpawnRadius(Player player) {
-        if(!player.getWorld().getName().equals("World2")) return false;
+        if(!player.getWorld().getName().equals(world)) return false;
         return  player.getWorld().getSpawnLocation().distance(player.getLocation()) < spawnRadius;
     }
 
