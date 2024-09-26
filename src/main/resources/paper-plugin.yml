@@ -1,0 +1,4 @@
+name: Elytra on Spawn 1.21
+version: '1.0'
+main: de.questcraft.plugins.elytraOnSpawn
+api-version: '1.21'
