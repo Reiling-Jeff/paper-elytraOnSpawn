@@ -2,6 +2,7 @@ package de.questcraft.plugins.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -24,6 +25,8 @@ public class SpawnBoostListener implements Listener{
     private final int spawnRadius;
     private final String world;
     private final float startBoostMultiplier;
+    private final int boostSoundVolume;
+    private final int boostSoundPitch;
     private final List<Player> flying = new ArrayList<>();
     private final List<Player> boosted = new ArrayList<>();
 
@@ -32,6 +35,8 @@ public class SpawnBoostListener implements Listener{
         this.spawnRadius = plugin.getConfig().getInt("spawnRadius");
         this.startBoostMultiplier = plugin.getConfig().getInt("startBoostMultiplier");
         this.world = plugin.getConfig().getString("world");
+        this.boostSoundVolume = plugin.getConfig().getInt("boostSoundVolume");
+        this.boostSoundPitch = plugin.getConfig().getInt("boostSoundPitch");
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             if(world != null) {
@@ -95,7 +100,10 @@ public class SpawnBoostListener implements Listener{
     }
 
     public void boostPlayer(Player player, boolean isBoost) {
-        if (isBoost) player.setVelocity(player.getLocation().getDirection().multiply(flyBoostMultiplier));
+        if (isBoost) {
+            player.setVelocity(player.getLocation().getDirection().multiply(flyBoostMultiplier));
+            player.playSound(player.getLocation(), Sound.ENTITY_BREEZE_WIND_BURST, boostSoundVolume, boostSoundPitch);
+        }
         else player.setVelocity(player.getLocation().getDirection().multiply(startBoostMultiplier));
     }
 }

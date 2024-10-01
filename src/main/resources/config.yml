@@ -2,3 +2,5 @@ spawnRadius: 40
 flyBoostMultiplier: 2
 startBoostMultiplier: 1.2
 world: world
+boostSoundVolume: 10 # 0 = false
+boostSoundPitch: 2
