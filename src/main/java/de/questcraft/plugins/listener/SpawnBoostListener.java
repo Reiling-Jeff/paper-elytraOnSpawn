@@ -2,14 +2,17 @@ package de.questcraft.plugins.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Flying;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.plugin.Plugin;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.bukkit.Bukkit.getLogger;
+import static org.bukkit.Bukkit.getPlayer;
 
 public class SpawnBoostListener implements Listener{
 
@@ -27,8 +31,12 @@ public class SpawnBoostListener implements Listener{
     private final float startBoostMultiplier;
     private final int boostSoundVolume;
     private final int boostSoundPitch;
+    private final boolean switchGamemodeCancelSound;
+    private final int switchGamemodeCancelSoundVolume;
+    private final int switchGamemodeCancelSoundPitch;
     private final List<Player> flying = new ArrayList<>();
     private final List<Player> boosted = new ArrayList<>();
+    private final List<Player> particle = new ArrayList<>();
 
     public SpawnBoostListener(Plugin plugin) {
         this.flyBoostMultiplier = plugin.getConfig().getInt("flyBoostMultiplier");
@@ -37,6 +45,9 @@ public class SpawnBoostListener implements Listener{
         this.world = plugin.getConfig().getString("world");
         this.boostSoundVolume = plugin.getConfig().getInt("boostSoundVolume");
         this.boostSoundPitch = plugin.getConfig().getInt("boostSoundPitch");
+        this.switchGamemodeCancelSound = plugin.getConfig().getBoolean("switchGamemodeCancelSound");
+        this.switchGamemodeCancelSoundVolume = plugin.getConfig().getInt("switchGamemodeCancelSoundVolume");
+        this.switchGamemodeCancelSoundPitch = plugin.getConfig().getInt("switchGamemodeCancelSoundPitch");
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             if(world != null) {
@@ -49,6 +60,7 @@ public class SpawnBoostListener implements Listener{
                         player.setFlying(false);
                         player.setGliding(false);
                         boosted.remove(player);
+                        particle.remove(player);
                         Bukkit.getScheduler().runTaskLater(plugin, () -> {
                             flying.remove(player);
                         }, 5);
@@ -65,7 +77,25 @@ public class SpawnBoostListener implements Listener{
         event.setCancelled(true);
         event.getPlayer().setGliding(true);
         flying.add(event.getPlayer());
+        particle.add(event.getPlayer());
         boostPlayer(event.getPlayer(), false);
+
+    }
+
+    @EventHandler
+    public void OnGamemodeSwitch(PlayerGameModeChangeEvent event) {
+        Player player = event.getPlayer();
+        if(event.getNewGameMode() != GameMode.CREATIVE) player.setAllowFlight(false);
+        player.setFlying(false);
+        player.setGliding(false);
+        boosted.remove(player);
+        particle.remove(player);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            flying.remove(player);
+            if(switchGamemodeCancelSound) {
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
+            }
+        }, 5);
     }
 
     @EventHandler
@@ -90,9 +120,8 @@ public class SpawnBoostListener implements Listener{
 
     @EventHandler
     public void onToggleGlide(EntityToggleGlideEvent event) {
-        if(event.getEntityType() == EntityType.PLAYER && flying.contains(event.getEntity())) event.setCancelled(true);
+        if (event.getEntityType() == EntityType.PLAYER && flying.contains(event.getEntity())) event.setCancelled(true);
     }
-
 
     private boolean isInSpawnRadius(Player player) {
         if(!player.getWorld().getName().equals(world)) return false;
@@ -105,5 +134,6 @@ public class SpawnBoostListener implements Listener{
             player.playSound(player.getLocation(), Sound.ENTITY_BREEZE_WIND_BURST, boostSoundVolume, boostSoundPitch);
         }
         else player.setVelocity(player.getLocation().getDirection().multiply(startBoostMultiplier));
-    }
+    world.spawnParticle(Particle.FLAME, player.getLocation(), 3);
+     }
 }
