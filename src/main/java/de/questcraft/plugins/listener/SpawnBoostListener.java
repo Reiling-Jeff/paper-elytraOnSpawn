@@ -90,12 +90,11 @@ public class SpawnBoostListener implements Listener{
         player.setGliding(false);
         boosted.remove(player);
         particle.remove(player);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            flying.remove(player);
-            if(switchGamemodeCancelSound) {
-                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
-            }
-        }, 5);
+
+        flying.remove(player);
+        if(switchGamemodeCancelSound) {
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
+        }
     }
 
     @EventHandler
@@ -134,6 +133,5 @@ public class SpawnBoostListener implements Listener{
             player.playSound(player.getLocation(), Sound.ENTITY_BREEZE_WIND_BURST, boostSoundVolume, boostSoundPitch);
         }
         else player.setVelocity(player.getLocation().getDirection().multiply(startBoostMultiplier));
-    world.spawnParticle(Particle.FLAME, player.getLocation(), 3);
      }
 }
