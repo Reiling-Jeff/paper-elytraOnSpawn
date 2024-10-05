@@ -6,7 +6,7 @@
 
     <groupId>de.questcraft.plugins</groupId>
     <artifactId>elytraOnSpawn</artifactId>
-    <version>1.0</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
 
     <name>SpawnElytra</name>

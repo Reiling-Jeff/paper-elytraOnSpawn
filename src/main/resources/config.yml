@@ -2,9 +2,11 @@ spawnRadius: 40
 flyBoostMultiplier: 2
 startBoostMultiplier: 1.2
 world: world
+boostSound: true
 boostSoundVolume: 10 # 0 = false
 boostSoundPitch: 2
 switchGamemodeCancelSound: true
 # if swiitchGamemodeCancelSound is "true"
 switchGamemodeCancelSoundVolume: 10 # 0 = flase
 switchGamemodeCancelSoundPitch: 2
+particle: true
