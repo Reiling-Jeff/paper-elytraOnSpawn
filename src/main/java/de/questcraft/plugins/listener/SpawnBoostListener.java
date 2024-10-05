@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -40,39 +41,40 @@ public class SpawnBoostListener implements Listener{
     private final List<Entity> flying = new ArrayList<>();
     private final List<Player> boosted = new ArrayList<>();
 
-    private final Logger logger;
+    private final Logger logger = getLogger();
 
     public SpawnBoostListener(Plugin plugin) {
 
-        this.flyBoostMultiplier = plugin.getConfig().getInt("flyBoostMultiplier");
-        this.spawnRadius = plugin.getConfig().getInt("spawnRadius");
-        this.startBoostMultiplier = plugin.getConfig().getInt("startBoostMultiplier");
-        this.world = plugin.getConfig().getString("world");
-        this.boostSound = plugin.getConfig().getBoolean("boostSound");
-        this.boostSoundVolume = plugin.getConfig().getInt("boostSoundVolume");
-        this.boostSoundPitch = plugin.getConfig().getInt("boostSoundPitch");
-        this.switchGamemodeCancelSound = plugin.getConfig().getBoolean("switchGamemodeCancelSound");
-        this.switchGamemodeCancelSoundVolume = plugin.getConfig().getInt("switchGamemodeCancelSoundVolume");
-        this.switchGamemodeCancelSoundPitch = plugin.getConfig().getInt("switchGamemodeCancelSoundPitch");
-        this.particle = plugin.getConfig().getBoolean("particle");
+        FileConfiguration config = plugin.getConfig();
 
-        this.logger = getLogger();
+        this.flyBoostMultiplier = config.getInt("flyBoostMultiplier");
+        this.spawnRadius = config.getInt("spawnRadius");
+        this.startBoostMultiplier = config.getInt("startBoostMultiplier");
+        this.world = config.getString("world");
+        this.boostSound = config.getBoolean("boostSound");
+        this.boostSoundVolume = config.getInt("boostSoundVolume");
+        this.boostSoundPitch = config.getInt("boostSoundPitch");
+        this.switchGamemodeCancelSound = config.getBoolean("switchGamemodeCancelSound");
+        this.switchGamemodeCancelSoundVolume = config.getInt("switchGamemodeCancelSoundVolume");
+        this.switchGamemodeCancelSoundPitch = config.getInt("switchGamemodeCancelSoundPitch");
+        this.particle = config.getBoolean("particle");
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            if(world != null) {
                 Objects.requireNonNull(Bukkit.getWorld(world)).getPlayers().forEach(player -> {
-                    if (player.getGameMode() != GameMode.SURVIVAL) return;
-                    player.setAllowFlight(isInSpawnRadius(player));
-                    if ((flying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())
-                            || (isInSpawnRadius(Objects.requireNonNull(player.getPlayer())) && boosted.contains(player.getPlayer()) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())) {
-                        player.setAllowFlight(false);
-                        player.setFlying(false);
-                        player.setGliding(false);
-                        boosted.remove(player);
-                        Bukkit.getScheduler().runTaskLater(plugin, () -> flying.remove(player), 5);
-                    }
+
+                if (player.getGameMode() != GameMode.SURVIVAL) return;
+
+                player.setAllowFlight(isInSpawnRadius(player));
+
+                if ((flying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())
+                        || (isInSpawnRadius(Objects.requireNonNull(player.getPlayer())) && boosted.contains(player.getPlayer()) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())) {
+                    player.setAllowFlight(false);
+                    player.setFlying(false);
+                    player.setGliding(false);
+                    boosted.remove(player);
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> flying.remove(player), 5);
+                }
                 });
-            } else logger.severe("Please make sure you added the right world name in config.yml. Default: \"world: world\"(you cant add multiple worlds yet)");
         }, 0, 3);
     }
 

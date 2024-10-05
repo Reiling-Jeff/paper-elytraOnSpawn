@@ -1,3 +1,5 @@
+verbose: true # for idiots
+
 spawnRadius: 40
 flyBoostMultiplier: 2
 startBoostMultiplier: 1.2
