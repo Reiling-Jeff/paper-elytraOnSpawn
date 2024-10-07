@@ -2,21 +2,18 @@ package de.questcraft.plugins;
 
 
 import de.questcraft.plugins.commands.elytraOnSpawnCommand;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import de.questcraft.plugins.listener.SpawnBoostListener;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 public final class elytraOnSpawn extends JavaPlugin {
@@ -43,20 +40,7 @@ public final class elytraOnSpawn extends JavaPlugin {
         configCheck();
         getServer().getPluginManager().registerEvents(new SpawnBoostListener(this), this);
         log.info("Loading elytraOnSpawn commands");
-        try {
-            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-            bukkitCommandMap.setAccessible(true);
-            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-
-            PluginCommand command = getCommand("elytraOnSpawn");
-            if (command == null) {
-                command = new PluginCommand("elytraOnSpawn", this);
-                commandMap.register(getName(), command);
-            }
-            command.setExecutor(new elytraOnSpawnCommand(this));
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        getCommand("elytraOnSpawn").setExecutor(new elytraOnSpawnCommand(this));
         log.info("Commands loaded!");
 
         log.info("ElytraOnSpawn is ready!");
@@ -66,6 +50,40 @@ public final class elytraOnSpawn extends JavaPlugin {
         File configFile = new File(getDataFolder(), "config.yml");
         config = YamlConfiguration.loadConfiguration(configFile);
     }
+
+    public void forceSaveDefaultConfig() {
+        File configFile = new File(this.getDataFolder(), "config.yml");
+
+        if (configFile.exists()) {
+            if (configFile.delete()) {
+                this.getLogger().info("Existing config.yml deleted.");
+            } else {
+                this.getLogger().warning("can't delete config.yml,");
+                return;
+            }
+            if (verbose) configCheck();
+        }
+
+        this.saveDefaultConfig();
+
+        this.reloadConfig();
+    }
+
+    public void restartPlugin() {
+        this.getLogger().info("trying to restart the plugin..");
+
+        // Deaktiviere das Plugin
+        getServer().getPluginManager().disablePlugin(this);
+
+        try {
+            getServer().getPluginManager().enablePlugin(this);
+            this.getLogger().info("Plugin restarted success");
+        } catch (Exception e) {
+            this.getLogger().severe("Something went wrong: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
     public void configCheck() {
         log.info("Performing config check...");

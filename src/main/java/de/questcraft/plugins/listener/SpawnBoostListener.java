@@ -27,37 +27,22 @@ import static org.bukkit.Bukkit.getLogger;
 
 public class SpawnBoostListener implements Listener{
 
-    private final float flyBoostMultiplier;
-    private final int spawnRadius;
-    private final String world;
-    private final float startBoostMultiplier;
-    private final boolean boostSound;
-    private final int boostSoundVolume;
-    private final int boostSoundPitch;
-    private final boolean switchGamemodeCancelSound;
-    private final int switchGamemodeCancelSoundVolume;
-    private final int switchGamemodeCancelSoundPitch;
-    private final boolean particle;
+    private float flyBoostMultiplier;
+    private int spawnRadius;
+    private String world;
+    private float startBoostMultiplier;
+    private boolean boostSound;
+    private int boostSoundVolume;
+    private int boostSoundPitch;
+    private boolean switchGamemodeCancelSound;
+    private int switchGamemodeCancelSoundVolume;
+    private int switchGamemodeCancelSoundPitch;
+    private boolean particle;
     private final List<Entity> flying = new ArrayList<>();
     private final List<Player> boosted = new ArrayList<>();
 
-    private final Logger logger = getLogger();
-
     public SpawnBoostListener(Plugin plugin) {
-
-        FileConfiguration config = plugin.getConfig();
-
-        this.flyBoostMultiplier = config.getInt("flyBoostMultiplier");
-        this.spawnRadius = config.getInt("spawnRadius");
-        this.startBoostMultiplier = config.getInt("startBoostMultiplier");
-        this.world = config.getString("world");
-        this.boostSound = config.getBoolean("boostSound");
-        this.boostSoundVolume = config.getInt("boostSoundVolume");
-        this.boostSoundPitch = config.getInt("boostSoundPitch");
-        this.switchGamemodeCancelSound = config.getBoolean("switchGamemodeCancelSound");
-        this.switchGamemodeCancelSoundVolume = config.getInt("switchGamemodeCancelSoundVolume");
-        this.switchGamemodeCancelSoundPitch = config.getInt("switchGamemodeCancelSoundPitch");
-        this.particle = config.getBoolean("particle");
+        loadInConfig(plugin);
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
                 Objects.requireNonNull(Bukkit.getWorld(world)).getPlayers().forEach(player -> {
@@ -150,5 +135,21 @@ public class SpawnBoostListener implements Listener{
         if(boostSound) {
             player.playSound(player.getLocation(), Sound.ENTITY_BREEZE_WIND_BURST, boostSoundVolume, boostSoundPitch);
         }
+    }
+
+    public void loadInConfig(Plugin plugin) {
+        FileConfiguration config = plugin.getConfig();
+
+        this.flyBoostMultiplier = config.getInt("flyBoostMultiplier");
+        this.spawnRadius = config.getInt("spawnRadius");
+        this.startBoostMultiplier = config.getInt("startBoostMultiplier");
+        this.world = config.getString("world");
+        this.boostSound = config.getBoolean("boostSound");
+        this.boostSoundVolume = config.getInt("boostSoundVolume");
+        this.boostSoundPitch = config.getInt("boostSoundPitch");
+        this.switchGamemodeCancelSound = config.getBoolean("switchGamemodeCancelSound");
+        this.switchGamemodeCancelSoundVolume = config.getInt("switchGamemodeCancelSoundVolume");
+        this.switchGamemodeCancelSoundPitch = config.getInt("switchGamemodeCancelSoundPitch");
+        this.particle = config.getBoolean("particle");
     }
 }
