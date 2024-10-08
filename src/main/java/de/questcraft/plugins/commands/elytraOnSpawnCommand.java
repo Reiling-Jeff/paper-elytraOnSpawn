@@ -38,70 +38,71 @@ public class elytraOnSpawnCommand implements CommandExecutor {
             String key = args[1];
             switch (key.toLowerCase()) {
 
-            case ("reset"):
-                plugin.forceSaveDefaultConfig();
-                plugin.restartPlugin();
-                return false;
-
-            case ("reload"):
-                plugin.reloadConfig();
-                plugin.restartPlugin();
-                return false;
-
-            case ("check"):
-                plugin.configCheck();
-                sender.sendMessage("Please check your server console");
-                return false;
-
-            default:
-                if (args.length == 2) {
-                    Object value = config.get(key);
-                    if (value != null) {
-                        sender.sendMessage("Current value of '" + key + "': " + value);
-                    } else {
-                        sender.sendMessage("Configuration key '" + key + "' not found.");
-                    }
-                }else if (args.length == 3) {
-                    String value = args[2];
-
-                    switch (key.toLowerCase()) {
-                        case "verbose", "boostsound", "switchgamemodecancelsound", "particle":
-                            boolean boolValue = Boolean.parseBoolean(value);
-                            config.set(key, boolValue);
-                            break;
-                        case "spawnradius", "boostsoundvolume", "boostsoundpitch", "switchgamemodecancelsoundvolume", "switchgamemodecancelsoundpitch":
-                            int intValue = Integer.parseInt(value);
-                            config.set(key, intValue);
-                            break;
-                        case "flyboostmultiplier", "startsoundboost":
-                            float floatValue = Float.parseFloat(value);
-                            if(floatValue < 1) {
-                                sender.sendMessage("Value must be 1 or higher.");
-                                break;
-                            }
-                            config.set(key, floatValue);
-                            break;
-                        case "world":
-                            config.set(key, value);
-                        default:
-                            sender.sendMessage("Unknown configuration key: " + key);
-                            return false;
-                    }
-
-                    try {
-                        config.save(configFile);
-                        sender.sendMessage("Configuration updated: " + key + " = " + value);
-                        plugin.reloadConfig();
-                    } catch (IOException e) {
-                        sender.sendMessage("Error saving configuration: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                } else {
-                    sender.sendMessage("Too many arguments. Usage: /elytraOnSpawn config <key> [value]");
+                case ("reset"):
+                    plugin.forceSaveDefaultConfig();
+                    plugin.restartPlugin();
                     return false;
-                }
+
+                case ("reload"):
+                    plugin.reloadConfig();
+                    plugin.restartPlugin();
+                    return false;
+
+                case ("check"):
+                    plugin.configCheck();
+                    sender.sendMessage("Please check your server console");
+                    return false;
+
+                default:
+                    if (args.length == 2) {
+                        Object value = config.get(key);
+                        if (value != null) {
+                            sender.sendMessage("Current value of '" + key + "': " + value);
+                        } else {
+                            sender.sendMessage("Configuration key '" + key + "' not found.");
+                        }
+                    } else if (args.length == 3) {
+                        String value = args[2];
+
+                        switch (key.toLowerCase()) {
+                            case "verbose", "boostsound", "switchgamemodecancelsound", "particle":
+                                boolean boolValue = Boolean.parseBoolean(value);
+                                config.set(key, boolValue);
+                                break;
+                            case "spawnradius", "boostsoundvolume", "boostsoundpitch",
+                                 "switchgamemodecancelsoundvolume", "switchgamemodecancelsoundpitch":
+                                int intValue = Integer.parseInt(value);
+                                config.set(key, intValue);
+                                break;
+                            case "flyboostmultiplier", "startsoundboost":
+                                float floatValue = Float.parseFloat(value);
+                                if (floatValue < 1) {
+                                    sender.sendMessage("Value must be 1 or higher.");
+                                    break;
+                                }
+                                config.set(key, floatValue);
+                                break;
+                            case "world":
+                                config.set(key, value);
+                            default:
+                                sender.sendMessage("Unknown configuration key: " + key);
+                                return false;
+                        }
+
+                        try {
+                            config.save(configFile);
+                            sender.sendMessage("Configuration updated: " + key + " = " + value);
+                            plugin.reloadConfig();
+                        } catch (IOException e) {
+                            sender.sendMessage("Error saving configuration: " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    } else {
+                        sender.sendMessage("Too many arguments. Usage: /elytraOnSpawn config <key> [value]");
+                        return false;
+                    }
             }
-        }else {
+        } else {
             sender.sendMessage("Invalid argument: " + args[0]);
             return false;
         }

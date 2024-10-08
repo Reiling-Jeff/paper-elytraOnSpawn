@@ -18,14 +18,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.plugin.Plugin;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
-import static org.bukkit.Bukkit.getLogger;
-
-public class SpawnBoostListener implements Listener{
+public class SpawnBoostListener implements Listener {
 
     private float flyBoostMultiplier;
     private int spawnRadius;
@@ -45,7 +43,7 @@ public class SpawnBoostListener implements Listener{
         loadInConfig(plugin);
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-                Objects.requireNonNull(Bukkit.getWorld(world)).getPlayers().forEach(player -> {
+            Objects.requireNonNull(Bukkit.getWorld(world)).getPlayers().forEach(player -> {
 
                 if (player.getGameMode() != GameMode.SURVIVAL) return;
 
@@ -59,14 +57,14 @@ public class SpawnBoostListener implements Listener{
                     boosted.remove(player);
                     Bukkit.getScheduler().runTaskLater(plugin, () -> flying.remove(player), 5);
                 }
-                });
+            });
         }, 0, 3);
     }
 
     @EventHandler
     public void onDoubleJump(PlayerToggleFlightEvent event) {
-        if(event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
-        if(!isInSpawnRadius(event.getPlayer())) return;
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
+        if (!isInSpawnRadius(event.getPlayer())) return;
         event.setCancelled(true);
         event.getPlayer().setGliding(true);
         flying.add(event.getPlayer());
@@ -76,7 +74,7 @@ public class SpawnBoostListener implements Listener{
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if(player.isGliding() && flying.contains(player) && particle) {
+        if (player.isGliding() && flying.contains(player) && particle) {
             player.getWorld().spawnParticle(Particle.FLAME, player.getLocation(), 3, 0, 0, 0, 0.05);
         }
     }
@@ -84,12 +82,12 @@ public class SpawnBoostListener implements Listener{
     @EventHandler
     public void OnGamemodeSwitch(PlayerGameModeChangeEvent event) {
         Player player = event.getPlayer();
-        if(event.getNewGameMode() != GameMode.CREATIVE) player.setAllowFlight(false);
+        if (event.getNewGameMode() != GameMode.CREATIVE) player.setAllowFlight(false);
         player.setFlying(false);
         player.setGliding(false);
         boosted.remove(player);
         flying.remove(player);
-        if(switchGamemodeCancelSound) {
+        if (switchGamemodeCancelSound) {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
         }
     }
@@ -97,21 +95,18 @@ public class SpawnBoostListener implements Listener{
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
-        if ((entity.getType() == EntityType.PLAYER)
-        && (event.getCause() == EntityDamageEvent.DamageCause.FALL || event.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL)
-        && flying.contains(entity))
+        if ((entity.getType() == EntityType.PLAYER) && (event.getCause() == EntityDamageEvent.DamageCause.FALL || event.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL) && flying.contains(entity))
             event.setCancelled(true);
     }
 
     @EventHandler
     public void onSwapItem(PlayerSwapHandItemsEvent event) {
-        if(event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
-        if(boosted.contains(event.getPlayer()) && !isInSpawnRadius(event.getPlayer())) return;
-        if((flying.contains(event.getPlayer()) && event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())
-            ||(isInSpawnRadius(event.getPlayer()) && !event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()))
-        {
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
+        if (boosted.contains(event.getPlayer()) && !isInSpawnRadius(event.getPlayer())) return;
+        if ((flying.contains(event.getPlayer()) && event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()) || (isInSpawnRadius(event.getPlayer()) && !event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())) {
             event.setCancelled(true);
-            if(event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir() || isInSpawnRadius(event.getPlayer())) boosted.add(event.getPlayer());
+            if (event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir() || isInSpawnRadius(event.getPlayer()))
+                boosted.add(event.getPlayer());
             boostPlayer(event.getPlayer(), true);
         }
     }
@@ -123,16 +118,15 @@ public class SpawnBoostListener implements Listener{
     }
 
     private boolean isInSpawnRadius(Player player) {
-        if(!player.getWorld().getName().equals(world)) return false;
-        return  player.getWorld().getSpawnLocation().distance(player.getLocation()) < spawnRadius;
+        if (!player.getWorld().getName().equals(world)) return false;
+        return player.getWorld().getSpawnLocation().distance(player.getLocation()) < spawnRadius;
     }
 
     public void boostPlayer(Player player, boolean isBoost) {
         if (isBoost) {
             player.setVelocity(player.getLocation().getDirection().multiply(flyBoostMultiplier));
-        }
-        else player.setVelocity(player.getLocation().getDirection().multiply(startBoostMultiplier));
-        if(boostSound) {
+        } else player.setVelocity(player.getLocation().getDirection().multiply(startBoostMultiplier));
+        if (boostSound) {
             player.playSound(player.getLocation(), Sound.ENTITY_BREEZE_WIND_BURST, boostSoundVolume, boostSoundPitch);
         }
     }
