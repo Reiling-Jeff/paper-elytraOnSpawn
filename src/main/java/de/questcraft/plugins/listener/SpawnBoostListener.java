@@ -21,10 +21,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
-
-import static org.bukkit.Bukkit.getLogger;
 
 public class SpawnBoostListener implements Listener {
 
