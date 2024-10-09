@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
+// TODO TabCompleter for ElytraOnSpawnCommand
 public class ElytraOnSpawnCommand implements CommandExecutor {
     private final ElytraOnSpawn plugin;
     private final FileConfiguration config;
@@ -29,7 +30,7 @@ public class ElytraOnSpawnCommand implements CommandExecutor {
         }
 
         if (args.length < 2) {
-
+            // TODO Create a "/elytraOnSpawn Help" command
             if (args[0].equalsIgnoreCase("reload")) {
                 plugin.reloadConfig();
                 plugin.restartPlugin();

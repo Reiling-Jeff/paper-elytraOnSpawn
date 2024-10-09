@@ -23,6 +23,7 @@ public final class ElytraOnSpawn extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // TODO make more Logs on startup
         log.info("ElytraOnSpawn is starting...");
 
         saveDefaultConfig();
