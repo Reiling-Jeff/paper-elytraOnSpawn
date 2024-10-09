@@ -137,6 +137,7 @@ public class SpawnBoostListener implements Listener {
         if (!player.getWorld().getName().equals(world)) return false;
 
         final double distance = player.getWorld().getSpawnLocation().distance(player.getLocation());
+
         return distance < spawnRadius;
     }
 
