@@ -4,4 +4,3 @@ main: de.questcraft.plugins.ElytraOnSpawn
 api-version: '1.21'
 commands:
   elytraOnSpawn:
-    alias: "eos"
