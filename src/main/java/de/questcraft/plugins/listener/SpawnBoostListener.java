@@ -28,12 +28,12 @@ public class SpawnBoostListener implements Listener {
     private int spawnRadius;
     private String world;
     private float startBoostMultiplier;
-    private boolean boostSound;
     private boolean boostSoundSetter;
+    private String boostSound;
     private int boostSoundVolume;
     private int boostSoundPitch;
-    private boolean switchGamemodeCancelSound;
     private boolean switchGamemodeCancelSoundSetter;
+    private String switchGamemodeCancelSound;
     private int switchGamemodeCancelSoundVolume;
     private int switchGamemodeCancelSoundPitch;
     private boolean particle;
