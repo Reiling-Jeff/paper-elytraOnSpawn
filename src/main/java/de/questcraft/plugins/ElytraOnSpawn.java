@@ -69,21 +69,20 @@ public final class ElytraOnSpawn extends JavaPlugin {
         Map<String, ConfigType> expectedVariableTypes = getConfigTypeMap();
 
         ArrayList<String> missingConfigs = new ArrayList<>();
-        expectedVariableTypes.forEach((variableName, value) -> {
+        expectedVariableTypes.forEach((variableName, variableType) -> {
             if (verbose && !config.contains(variableName)) {
                 log.severe("Missing configuration: " + variableName);
                 missingConfigs.add(variableName);
                 return;
             }
 
-            boolean isValid = expectedVariableTypes.get(variableName).isValid.test(value);
+            boolean isValid = variableType.isValid.test(config.get(variableName));
+            if (verbose && isValid) log.info("Config found and valid: " + variableName + " = " + config.get(variableName));
             if (isValid) return;
 
-            String typeError = expectedVariableTypes.get(variableName).message;
+            String typeError = variableType.message;
             log.severe("Invalid configuration for " + variableName + ": " + typeError);
             missingConfigs.add(variableName);
-
-            if (verbose) log.info("Config found and valid: " + variableName + " = " + value);
         });
 
         if (!missingConfigs.isEmpty()) {
