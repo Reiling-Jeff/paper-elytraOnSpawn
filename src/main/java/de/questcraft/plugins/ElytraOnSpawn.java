@@ -29,6 +29,8 @@ public final class ElytraOnSpawn extends JavaPlugin {
         loadConfig();
         configCheck();
 
+        SoundMapper.initialize();
+
         log.info("Loading elytraOnSpawn events...");
         getServer().getPluginManager().registerEvents(new SpawnBoostListener(this), this);
 
