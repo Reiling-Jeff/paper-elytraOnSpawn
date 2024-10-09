@@ -3,7 +3,6 @@ package de.questcraft.plugins.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
