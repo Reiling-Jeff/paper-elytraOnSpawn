@@ -99,7 +99,7 @@ public class ElytraOnSpawnCommand implements CommandExecutor {
                 }
                 config.set(firstArgument, floatValue);
                 break;
-            case "world":
+            case "world", "boostsound", "switchgamemodecancelsound":
                 config.set(firstArgument, secondArgument);
             default:
                 sender.sendMessage("Unknown configuration key: " + firstArgument);
