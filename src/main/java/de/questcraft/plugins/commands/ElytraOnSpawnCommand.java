@@ -4,17 +4,41 @@ import de.questcraft.plugins.ElytraOnSpawn;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 // TODO TabCompleter for ElytraOnSpawnCommand
-public class ElytraOnSpawnCommand implements CommandExecutor {
+public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
     private final ElytraOnSpawn plugin;
     private final FileConfiguration config;
     private final File configFile;
+
+    private final List<String> mainCommands = Arrays.asList("config", "conf", "reload");
+    private final List<String> configCommands = Arrays.asList("reset", "check");
+    private final List<String> configKeys = Arrays.asList(
+            "verbose",
+            "spawnradius",
+            "flyboostmultiplier",
+            "startboostmultiplier",
+            "world",
+            "boostsoundsetter",
+            "boostsound",
+            "boostsoundvolume",
+            "boostsoundpitch",
+            "switchgamemodecancelsoundsetter",
+            "switchgamemodecancelsound",
+            "switchgamemodecancelsoundvolume",
+            "switchgamemodecancelsoundpitch",
+            "particle"
+    );
 
     public ElytraOnSpawnCommand(ElytraOnSpawn plugin) {
         this.plugin = plugin;
@@ -47,6 +71,34 @@ public class ElytraOnSpawnCommand implements CommandExecutor {
             sender.sendMessage("Invalid argument: " + args[0]);
             return false;
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+
+        if (args.length == 1) {
+            return mainCommands.stream()
+                    .filter(c -> c.startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        } else if (args.length == 2 && (args[0].equalsIgnoreCase("config") || args[0].equalsIgnoreCase("conf"))) {
+            List<String> options = new ArrayList<>(configCommands);
+            options.addAll(configKeys);
+            return options.stream()
+                    .filter(c -> c.startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
+        } else if (args.length == 3 && (args[0].equalsIgnoreCase("config") || args[0].equalsIgnoreCase("conf"))) {
+            switch (args[1].toLowerCase()) {
+                case "verbose", "boostsoundsetter", "switchgamemodecancelsoundsetter", "particle":
+                    return Arrays.asList("true", "false");
+                case "world", "boostsound", "switchgamemodecancelsound":
+                    return null;
+                default:
+                    return Arrays.asList("<value>");
+            }
+        }
+
+        return completions;
     }
 
     private boolean parseFirstArgument(CommandSender sender, String[] args) {
