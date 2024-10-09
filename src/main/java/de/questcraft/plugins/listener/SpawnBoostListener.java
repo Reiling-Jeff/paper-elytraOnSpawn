@@ -3,6 +3,7 @@ import de.questcraft.plugins.SoundMapper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -29,10 +30,12 @@ public class SpawnBoostListener implements Listener {
     private float startBoostMultiplier;
     private boolean boostSoundSetter;
     private String boostSound;
+    private final Sound actualBoostSound;
     private int boostSoundVolume;
     private int boostSoundPitch;
     private boolean switchGamemodeCancelSoundSetter;
     private String switchGamemodeCancelSound;
+    private final Sound actualSwitchGamemodeCancelSound;
     private int switchGamemodeCancelSoundVolume;
     private int switchGamemodeCancelSoundPitch;
     private boolean particle;
@@ -41,6 +44,9 @@ public class SpawnBoostListener implements Listener {
 
     public SpawnBoostListener(final Plugin plugin) {
         loadInConfig(plugin);
+
+        actualBoostSound = SoundMapper.getSound(boostSound);
+        actualSwitchGamemodeCancelSound = SoundMapper.getSound(switchGamemodeCancelSound);
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             Bukkit.getWorld(world).getPlayers().forEach(player -> {
@@ -94,7 +100,7 @@ public class SpawnBoostListener implements Listener {
         boosted.remove(player);
         flying.remove(player);
         if (switchGamemodeCancelSoundSetter)
-            player.playSound(player.getLocation(), SoundMapper.getSound(switchGamemodeCancelSound), switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
+            player.playSound(player.getLocation(), actualSwitchGamemodeCancelSound, switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
     }
 
     @EventHandler
@@ -139,7 +145,7 @@ public class SpawnBoostListener implements Listener {
         player.setVelocity(player.getLocation().getDirection().multiply(boosMultiplier));
 
         if (boostSoundSetter)
-            player.playSound(player.getLocation(), SoundMapper.getSound(boostSound), boostSoundVolume, boostSoundPitch);
+            player.playSound(player.getLocation(), actualBoostSound, boostSoundVolume, boostSoundPitch);
     }
 
     public void loadInConfig(Plugin plugin) {
