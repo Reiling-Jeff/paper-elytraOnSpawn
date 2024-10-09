@@ -1,1 +1,1 @@
-Well, ig the README is'nt done yet. Find out yourself and learn easy Java code.
+Well, ig the README isn't done yet. Find out yourself and learn easy Java code.
