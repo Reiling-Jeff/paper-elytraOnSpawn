@@ -94,8 +94,8 @@ public class SpawnBoostListener implements Listener {
         player.setGliding(false);
         boosted.remove(player);
         flying.remove(player);
-        if (switchGamemodeCancelSound)
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
+        if (switchGamemodeCancelSoundSetter)
+            player.playSound(player.getLocation(), SoundMapper.getSound(switchGamemodeCancelSound), switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
     }
 
     @EventHandler
@@ -139,8 +139,8 @@ public class SpawnBoostListener implements Listener {
         final float boosMultiplier = isBoost ? flyBoostMultiplier : startBoostMultiplier;
         player.setVelocity(player.getLocation().getDirection().multiply(boosMultiplier));
 
-        if (boostSound)
-            player.playSound(player.getLocation(), Sound.ENTITY_BREEZE_WIND_BURST, boostSoundVolume, boostSoundPitch);
+        if (boostSoundSetter)
+            player.playSound(player.getLocation(), SoundMapper.getSound(boostSound), boostSoundVolume, boostSoundPitch);
     }
 
     public void loadInConfig(Plugin plugin) {
