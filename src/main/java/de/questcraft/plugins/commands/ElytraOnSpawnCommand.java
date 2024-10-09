@@ -29,7 +29,14 @@ public class ElytraOnSpawnCommand implements CommandExecutor {
         }
 
         if (args.length < 2) {
-            sender.sendMessage("Usage: /elytraOnSpawn config <key> [value]");
+
+            if (args[0].equalsIgnoreCase("reload")) {
+                plugin.reloadConfig();
+                plugin.restartPlugin();
+                return true;
+            } else {
+                sender.sendMessage("Usage: /elytraOnSpawn config <key> [value]");
+            }
             return false;
         }
 
@@ -47,11 +54,6 @@ public class ElytraOnSpawnCommand implements CommandExecutor {
             case ("reset"):
                 plugin.deleteConfig();
                 plugin.saveDefaultConfig();
-                plugin.restartPlugin();
-                return true;
-
-            case ("reload"):
-                plugin.reloadConfig();
                 plugin.restartPlugin();
                 return true;
 
