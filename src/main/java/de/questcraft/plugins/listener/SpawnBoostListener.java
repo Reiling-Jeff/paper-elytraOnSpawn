@@ -150,10 +150,12 @@ public class SpawnBoostListener implements Listener {
         this.spawnRadius = config.getInt("spawnRadius");
         this.startBoostMultiplier = config.getInt("startBoostMultiplier");
         this.world = config.getString("world");
-        this.boostSound = config.getBoolean("boostSound");
+        this.boostSoundSetter = config.getBoolean("boostSoundSetter");
+        this.boostSound = config.getString("boostSound");
         this.boostSoundVolume = config.getInt("boostSoundVolume");
         this.boostSoundPitch = config.getInt("boostSoundPitch");
-        this.switchGamemodeCancelSound = config.getBoolean("switchGamemodeCancelSound");
+        this.switchGamemodeCancelSoundSetter = config.getBoolean("switchGamemodeCancelSoundSetter");
+        this.switchGamemodeCancelSound = config.getString("switchGamemodeCancelSound");
         this.switchGamemodeCancelSoundVolume = config.getInt("switchGamemodeCancelSoundVolume");
         this.switchGamemodeCancelSoundPitch = config.getInt("switchGamemodeCancelSoundPitch");
         this.particle = config.getBoolean("particle");
