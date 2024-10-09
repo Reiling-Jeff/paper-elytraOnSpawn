@@ -82,7 +82,7 @@ public class ElytraOnSpawnCommand implements CommandExecutor {
 
     private boolean parseSecondArgument(CommandSender sender, String firstArgument, String secondArgument) {
         switch (firstArgument.toLowerCase()) {
-            case "verbose", "boostsound", "switchgamemodecancelsound", "particle":
+            case "verbose", "boostsoundsetter", "switchgamemodecancelsoundsetter", "particle":
                 boolean boolValue = Boolean.parseBoolean(secondArgument);
                 config.set(firstArgument, boolValue);
                 break;
