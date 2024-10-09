@@ -94,22 +94,15 @@ public final class ElytraOnSpawn extends JavaPlugin {
         }
     }
 
-    public void forceSaveDefaultConfig() {
+    public void deleteConfig() {
         File configFile = new File(this.getDataFolder(), "config.yml");
-
         if (configFile.exists()) {
             if (configFile.delete()) {
                 this.getLogger().info("Existing config.yml deleted.");
             } else {
                 this.getLogger().warning("can't delete config.yml,");
-                return;
             }
-            if (verbose) configCheck();
         }
-
-        this.saveDefaultConfig();
-
-        this.reloadConfig();
     }
 
 

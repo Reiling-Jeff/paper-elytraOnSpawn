@@ -1,6 +1,6 @@
 name: ElytraOnSpawn
 version: '1.3'
-main: de.questcraft.plugins.elytraOnSpawn
+main: de.questcraft.plugins.ElytraOnSpawn
 api-version: '1.21'
 commands:
   elytraOnSpawn:
