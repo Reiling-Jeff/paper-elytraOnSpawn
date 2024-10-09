@@ -45,7 +45,6 @@ public class ElytraOnSpawnCommand implements CommandExecutor {
         String firstArgument = args[1];
         switch (firstArgument.toLowerCase()) {
             case ("reset"):
-                plugin.forceSaveDefaultConfig();
                 plugin.deleteConfig();
                 plugin.saveDefaultConfig();
                 plugin.restartPlugin();
