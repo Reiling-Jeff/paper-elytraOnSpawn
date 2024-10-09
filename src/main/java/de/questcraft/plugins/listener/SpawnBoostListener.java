@@ -56,7 +56,6 @@ public class SpawnBoostListener implements Listener {
 
                 if (!isFirstContact && !hasSpawnPrivileges) return;
 
-                // set anticheat permissions / animation
                 player.setAllowFlight(false);
                 player.setFlying(false);
                 player.setGliding(false);
