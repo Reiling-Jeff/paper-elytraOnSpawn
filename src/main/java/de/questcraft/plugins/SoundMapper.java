@@ -23,7 +23,7 @@ public class SoundMapper {
                 return bukkitSound;
             }
             return Sound.valueOf(soundKey.toUpperCase().replace(".", "_"));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             e.printStackTrace();
             return Sound.ENTITY_CREEPER_HURT;
         }
