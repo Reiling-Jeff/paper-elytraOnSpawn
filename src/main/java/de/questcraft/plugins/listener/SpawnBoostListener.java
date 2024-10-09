@@ -1,5 +1,5 @@
 package de.questcraft.plugins.listener;
-
+import de.questcraft.plugins.SoundMapper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Particle;
