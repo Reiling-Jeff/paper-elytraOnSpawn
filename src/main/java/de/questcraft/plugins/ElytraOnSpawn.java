@@ -26,10 +26,12 @@ public final class ElytraOnSpawn extends JavaPlugin {
         // TODO make more Logs on startup
         log.info("ElytraOnSpawn is starting...");
 
+        log.info("Loading config...");
         saveDefaultConfig();
         loadConfig();
         configCheck();
 
+        log.info("nitialize sounds...");
         SoundMapper.initialize();
 
         log.info("Loading elytraOnSpawn events...");
