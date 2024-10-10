@@ -106,7 +106,6 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
         switch (firstArgument.toLowerCase()) {
             case ("reset"):
                 plugin.deleteConfig();
-                plugin.saveDefaultConfig();
                 plugin.restartPlugin();
                 return true;
 
