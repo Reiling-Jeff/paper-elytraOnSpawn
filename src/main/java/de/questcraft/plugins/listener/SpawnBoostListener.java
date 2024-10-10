@@ -42,8 +42,8 @@ public class SpawnBoostListener implements Listener {
     private final List<Entity> flying = new ArrayList<>();
     private final List<Player> boosted = new ArrayList<>();
 
-    public SpawnBoostListener(final Plugin plugin) {
-        loadInConfig(plugin);
+    public SpawnBoostListener(final Plugin plugin, FileConfiguration config) {
+        loadInConfig(config);
 
         actualBoostSound = SoundMapper.getSound(boostSound);
         actualSwitchGamemodeCancelSound = SoundMapper.getSound(switchGamemodeCancelSound);
@@ -149,8 +149,7 @@ public class SpawnBoostListener implements Listener {
             player.playSound(player.getLocation(), actualBoostSound, boostSoundVolume, boostSoundPitch);
     }
 
-    public void loadInConfig(Plugin plugin) {
-        FileConfiguration config = plugin.getConfig();
+    public void loadInConfig(FileConfiguration config) {
 
         this.flyBoostMultiplier = config.getInt("flyBoostMultiplier");
         this.spawnRadius = config.getInt("spawnRadius");

@@ -35,7 +35,7 @@ public final class ElytraOnSpawn extends JavaPlugin {
         SoundMapper.initialize();
 
         log.info("Loading elytraOnSpawn events...");
-        getServer().getPluginManager().registerEvents(new SpawnBoostListener(this), this);
+        getServer().getPluginManager().registerEvents(new SpawnBoostListener(this,config), this);
 
         log.info("Loading elytraOnSpawn commands...");
         getCommand("elytraOnSpawn").setExecutor(new ElytraOnSpawnCommand(this));
