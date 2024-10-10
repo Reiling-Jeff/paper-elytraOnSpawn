@@ -130,6 +130,16 @@ public final class ElytraOnSpawn extends JavaPlugin {
         return config;
     }
 
+    public Object getConfigValue(FileConfiguration config, String key) {
+        String lowercaseKey = key.toLowerCase();
+        for (String configKey : config.getKeys(true)) {
+            if (configKey.toLowerCase().equals(lowercaseKey)) {
+                return config.get(configKey);
+            }
+        }
+        return config.get(key);
+    }
+
     public void setConfigValue(FileConfiguration config, String key, Object value) {
         String lowercaseKey = key.toLowerCase();
         for (String configKey : config.getKeys(true)) {

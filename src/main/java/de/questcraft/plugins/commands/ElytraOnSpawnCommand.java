@@ -116,7 +116,7 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
 
             default:
                 if (args.length == 2) {
-                    Object value = config.get(firstArgument);
+                    Object value = plugin.getConfigValue(config, firstArgument);
                     if (value != null) {
                         sender.sendMessage("Current value of '" + firstArgument + "': " + value);
                     } else {
@@ -152,7 +152,6 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
                 plugin.setConfigValue(config, firstArgument, floatValue);
                 break;
             case "world", "boostsound", "switchgamemodecancelsound":
-                config.set(firstArgument, secondArgument);
                 plugin.setConfigValue(config, firstArgument, secondArgument);
                 break;
             default:
