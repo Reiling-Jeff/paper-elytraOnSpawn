@@ -13,6 +13,7 @@ public class SoundMapper {
             String vanillaSoundKey = bukkitSound.getKey().getKey();
             vanillaToBukkitMap.put(vanillaSoundKey, bukkitSound);
         }
+        // TODO Use plugins logger
         System.out.println("SoundMapper initialized with " + vanillaToBukkitMap.size() + " sounds.");
     }
 
