@@ -130,6 +130,15 @@ public final class ElytraOnSpawn extends JavaPlugin {
         return config;
     }
 
+    public void setConfigValue(FileConfiguration config, String key, Object value) {
+        String lowercaseKey = key.toLowerCase();
+        for (String configKey : config.getKeys(true)) {
+            if (configKey.toLowerCase().equals(lowercaseKey)) {
+                config.set(configKey, value);
+            }
+        }
+    }
+
     private record ConfigType(String message, Predicate<Object> isValid) {
         static final ConfigType BOOLEAN = new ConfigType("should be true or false", o -> o instanceof Boolean);
         static final ConfigType NUMBER = new ConfigType("should be a number", o -> o instanceof Number);

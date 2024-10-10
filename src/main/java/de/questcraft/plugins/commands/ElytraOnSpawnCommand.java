@@ -136,12 +136,12 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
         switch (firstArgument.toLowerCase()) {
             case "verbose", "boostsoundsetter", "switchgamemodecancelsoundsetter", "particle":
                 boolean boolValue = Boolean.parseBoolean(secondArgument);
-                config.set(firstArgument, boolValue);
+                plugin.setConfigValue(config, firstArgument, boolValue);
                 break;
             case "spawnradius", "boostsoundvolume", "boostsoundpitch",
                  "switchgamemodecancelsoundvolume", "switchgamemodecancelsoundpitch":
                 int intValue = Integer.parseInt(secondArgument);
-                config.set(firstArgument, intValue);
+                plugin.setConfigValue(config, firstArgument, intValue);
                 break;
             case "flyboostmultiplier", "startsoundboost":
                 float floatValue = Float.parseFloat(secondArgument);
@@ -149,10 +149,12 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("Value must be 1 or higher.");
                     break;
                 }
-                config.set(firstArgument, floatValue);
+                plugin.setConfigValue(config, firstArgument, floatValue);
                 break;
             case "world", "boostsound", "switchgamemodecancelsound":
                 config.set(firstArgument, secondArgument);
+                plugin.setConfigValue(config, firstArgument, secondArgument);
+                break;
             default:
                 sender.sendMessage("Unknown configuration key: " + firstArgument);
                 return true;
