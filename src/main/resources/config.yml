@@ -8,13 +8,9 @@ world: world
 boostSoundSetter: true
 # if boostSoundSetter is "true"
 boostSound: entity.breeze.wind.burst
-boostSoundVolume: 10
-boostSoundPitch: 2
 
 switchGamemodeCancelSoundSetter: true
 # if swiitchGamemodeCancelSoundSetter is "true"
 switchGamemodeCancelSound: block.anvil.destroy
-switchGamemodeCancelSoundVolume: 10
-switchGamemodeCancelSoundPitch: 2
 
 particle: true

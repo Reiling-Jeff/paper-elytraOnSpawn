@@ -32,13 +32,9 @@ public class SpawnBoostListener implements Listener {
     private boolean boostSoundSetter;
     private String boostSound;
     private final Sound actualBoostSound;
-    private int boostSoundVolume;
-    private int boostSoundPitch;
     private boolean switchGamemodeCancelSoundSetter;
     private String switchGamemodeCancelSound;
     private final Sound actualSwitchGamemodeCancelSound;
-    private int switchGamemodeCancelSoundVolume;
-    private int switchGamemodeCancelSoundPitch;
     private boolean particle;
     private final List<Entity> flying = new ArrayList<>();
     private final List<Player> boosted = new ArrayList<>();
@@ -101,7 +97,7 @@ public class SpawnBoostListener implements Listener {
         boosted.remove(player);
         flying.remove(player);
         if (switchGamemodeCancelSoundSetter)
-            player.playSound(player.getLocation(), actualSwitchGamemodeCancelSound, switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
+            player.playSound(player.getLocation(), actualSwitchGamemodeCancelSound, 10, 2);
     }
 
     @EventHandler
@@ -147,7 +143,7 @@ public class SpawnBoostListener implements Listener {
         player.setVelocity(player.getLocation().getDirection().multiply(boosMultiplier));
 
         if (boostSoundSetter)
-            player.playSound(player.getLocation(), actualBoostSound, boostSoundVolume, boostSoundPitch);
+            player.playSound(player.getLocation(), actualBoostSound, 10, 2);
     }
 
     public void loadInConfig(FileConfiguration config) {
@@ -158,12 +154,8 @@ public class SpawnBoostListener implements Listener {
         this.world = config.getString("world");
         this.boostSoundSetter = config.getBoolean("boostSoundSetter");
         this.boostSound = config.getString("boostSound");
-        this.boostSoundVolume = config.getInt("boostSoundVolume");
-        this.boostSoundPitch = config.getInt("boostSoundPitch");
         this.switchGamemodeCancelSoundSetter = config.getBoolean("switchGamemodeCancelSoundSetter");
         this.switchGamemodeCancelSound = config.getString("switchGamemodeCancelSound");
-        this.switchGamemodeCancelSoundVolume = config.getInt("switchGamemodeCancelSoundVolume");
-        this.switchGamemodeCancelSoundPitch = config.getInt("switchGamemodeCancelSoundPitch");
         this.particle = config.getBoolean("particle");
     }
 }

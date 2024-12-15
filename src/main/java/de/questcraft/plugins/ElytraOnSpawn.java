@@ -58,12 +58,8 @@ public final class ElytraOnSpawn extends JavaPlugin {
         expectedVariableTypes.put("world", ConfigType.STRING);
         expectedVariableTypes.put("boostSoundSetter", ConfigType.BOOLEAN);
         expectedVariableTypes.put("boostSound", ConfigType.STRING);
-        expectedVariableTypes.put("boostSoundVolume", ConfigType.NUMBER);
-        expectedVariableTypes.put("boostSoundPitch", ConfigType.NUMBER);
         expectedVariableTypes.put("switchGamemodeCancelSoundSetter", ConfigType.BOOLEAN);
         expectedVariableTypes.put("switchGamemodeCancelSound", ConfigType.STRING);
-        expectedVariableTypes.put("switchGamemodeCancelSoundVolume", ConfigType.NUMBER);
-        expectedVariableTypes.put("switchGamemodeCancelSoundPitch", ConfigType.NUMBER);
         expectedVariableTypes.put("particle", ConfigType.BOOLEAN);
         return expectedVariableTypes;
     }

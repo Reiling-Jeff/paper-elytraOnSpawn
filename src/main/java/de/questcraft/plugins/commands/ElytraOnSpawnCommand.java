@@ -31,12 +31,8 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
             "world",
             "boostsoundsetter",
             "boostsound",
-            "boostsoundvolume",
-            "boostsoundpitch",
             "switchgamemodecancelsoundsetter",
             "switchgamemodecancelsound",
-            "switchgamemodecancelsoundvolume",
-            "switchgamemodecancelsoundpitch",
             "particle"
     );
 
@@ -138,12 +134,11 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
                 boolean boolValue = Boolean.parseBoolean(secondArgument);
                 plugin.setConfigValue(config, firstArgument, boolValue);
                 break;
-            case "spawnradius", "boostsoundvolume", "boostsoundpitch",
-                 "switchgamemodecancelsoundvolume", "switchgamemodecancelsoundpitch":
+            case "spawnradius":
                 int intValue = Integer.parseInt(secondArgument);
                 plugin.setConfigValue(config, firstArgument, intValue);
                 break;
-            case "flyboostmultiplier", "startsoundboost":
+            case "flyboostmultiplier", "startboostmultiplier", "startsoundboost":
                 float floatValue = Float.parseFloat(secondArgument);
                 if (floatValue < 1) {
                     sender.sendMessage("Value must be 1 or higher.");
