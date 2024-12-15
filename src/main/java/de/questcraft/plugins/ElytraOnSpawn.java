@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public final class ElytraOnSpawn extends JavaPlugin {
 
     private final Logger log = getLogger();
-    private boolean verbose = true;
+    private boolean verbose;
     private FileConfiguration config;
 
     @Override
