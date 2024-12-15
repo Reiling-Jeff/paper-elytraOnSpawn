@@ -3,7 +3,6 @@ package de.questcraft.plugins;
 
 import de.questcraft.plugins.commands.ElytraOnSpawnCommand;
 import de.questcraft.plugins.listener.SpawnBoostListener;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
