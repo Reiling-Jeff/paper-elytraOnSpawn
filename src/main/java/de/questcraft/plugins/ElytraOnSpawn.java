@@ -101,9 +101,9 @@ public final class ElytraOnSpawn extends JavaPlugin {
         File configFile = new File(this.getDataFolder(), "config.yml");
         if (configFile.exists()) {
             if (configFile.delete()) {
-                this.getLogger().info("Existing config.yml deleted.");
+                log.info("Existing config.yml deleted.");
             } else {
-                this.getLogger().warning("can't delete config.yml,");
+                log.warning("can't delete config.yml,");
             }
         }
     }
@@ -116,9 +116,12 @@ public final class ElytraOnSpawn extends JavaPlugin {
 
         try {
             getServer().getPluginManager().enablePlugin(this);
-            this.getLogger().info("Plugin restarted success");
+            if(getServer().getPluginManager().isPluginEnabled(this))
+                log.info("Plugin restarted success");
+            else
+                log.severe("cant start plugin");
         } catch (Exception e) {
-            this.getLogger().severe("Something went wrong: " + e.getMessage());
+            log.severe("Something went wrong: " + e.getMessage());
             e.printStackTrace();
         }
     }
