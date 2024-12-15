@@ -109,7 +109,7 @@ public final class ElytraOnSpawn extends JavaPlugin {
 
 
     public void restartPlugin() {
-        this.getLogger().info("trying to restart the plugin..");
+        log.info("trying to restart the plugin..");
 
         getServer().getPluginManager().disablePlugin(this);
 
