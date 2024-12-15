@@ -1,5 +1,5 @@
 package de.questcraft.plugins.listener;
-
+import de.questcraft.plugins.SoundMapper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Particle;
@@ -18,137 +18,143 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.plugin.Plugin;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
 
-import static org.bukkit.Bukkit.getLogger;
+public class SpawnBoostListener implements Listener {
 
-public class SpawnBoostListener implements Listener{
-
-    private final float flyBoostMultiplier;
-    private final int spawnRadius;
-    private final String world;
-    private final float startBoostMultiplier;
-    private final boolean boostSound;
-    private final int boostSoundVolume;
-    private final int boostSoundPitch;
-    private final boolean switchGamemodeCancelSound;
-    private final int switchGamemodeCancelSoundVolume;
-    private final int switchGamemodeCancelSoundPitch;
-    private final boolean particle;
+    private float flyBoostMultiplier;
+    private int spawnRadius;
+    private String world;
+    private float startBoostMultiplier;
+    private boolean boostSoundSetter;
+    private String boostSound;
+    private final Sound actualBoostSound;
+    private boolean switchGamemodeCancelSoundSetter;
+    private String switchGamemodeCancelSound;
+    private final Sound actualSwitchGamemodeCancelSound;
+    private boolean particle;
     private final List<Entity> flying = new ArrayList<>();
     private final List<Player> boosted = new ArrayList<>();
 
-    private final Logger logger = getLogger();
+    public SpawnBoostListener(final Plugin plugin, FileConfiguration config) {
+        loadInConfig(config);
 
-    public SpawnBoostListener(Plugin plugin) {
-
-        FileConfiguration config = plugin.getConfig();
-
-        this.flyBoostMultiplier = config.getInt("flyBoostMultiplier");
-        this.spawnRadius = config.getInt("spawnRadius");
-        this.startBoostMultiplier = config.getInt("startBoostMultiplier");
-        this.world = config.getString("world");
-        this.boostSound = config.getBoolean("boostSound");
-        this.boostSoundVolume = config.getInt("boostSoundVolume");
-        this.boostSoundPitch = config.getInt("boostSoundPitch");
-        this.switchGamemodeCancelSound = config.getBoolean("switchGamemodeCancelSound");
-        this.switchGamemodeCancelSoundVolume = config.getInt("switchGamemodeCancelSoundVolume");
-        this.switchGamemodeCancelSoundPitch = config.getInt("switchGamemodeCancelSoundPitch");
-        this.particle = config.getBoolean("particle");
+        actualBoostSound = SoundMapper.getSound(boostSound);
+        actualSwitchGamemodeCancelSound = SoundMapper.getSound(switchGamemodeCancelSound);
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-                Objects.requireNonNull(Bukkit.getWorld(world)).getPlayers().forEach(player -> {
+            Bukkit.getWorld(world).getPlayers().forEach(player -> {
 
                 if (player.getGameMode() != GameMode.SURVIVAL) return;
 
                 player.setAllowFlight(isInSpawnRadius(player));
 
-                if ((flying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())
-                        || (isInSpawnRadius(Objects.requireNonNull(player.getPlayer())) && boosted.contains(player.getPlayer()) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())) {
-                    player.setAllowFlight(false);
-                    player.setFlying(false);
-                    player.setGliding(false);
-                    boosted.remove(player);
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> flying.remove(player), 5);
-                }
-                });
+                final boolean isPlayerInAir = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir();
+
+                final boolean isFirstContact = flying.contains(player) && !isPlayerInAir;
+                final boolean hasSpawnPrivileges = isInSpawnRadius(player) && boosted.contains(player) && !isPlayerInAir;
+
+                if (!isFirstContact && !hasSpawnPrivileges) return;
+
+                player.setAllowFlight(false);
+                player.setFlying(false);
+                player.setGliding(false);
+
+                boosted.remove(player);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> flying.remove(player), 5);
+            });
         }, 0, 3);
     }
 
+
     @EventHandler
-    public void onDoubleJump(PlayerToggleFlightEvent event) {
-        if(event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
-        if(!isInSpawnRadius(event.getPlayer())) return;
+    public void onDoubleJump(final PlayerToggleFlightEvent event) {
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
+        if (!isInSpawnRadius(event.getPlayer())) return;
         event.setCancelled(true);
+
         event.getPlayer().setGliding(true);
-        flying.add(event.getPlayer());
         boostPlayer(event.getPlayer(), false);
+        flying.add(event.getPlayer());
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        if(player.isGliding() && flying.contains(player) && particle) {
+    public void onPlayerMove(final PlayerMoveEvent event) {
+        final Player player = event.getPlayer();
+        if (player.isGliding() && flying.contains(player) && particle)
             player.getWorld().spawnParticle(Particle.FLAME, player.getLocation(), 3, 0, 0, 0, 0.05);
-        }
     }
 
     @EventHandler
-    public void OnGamemodeSwitch(PlayerGameModeChangeEvent event) {
-        Player player = event.getPlayer();
-        if(event.getNewGameMode() != GameMode.CREATIVE) player.setAllowFlight(false);
+    public void onGamemodeSwitch(final PlayerGameModeChangeEvent event) {
+        final Player player = event.getPlayer();
+        if (event.getNewGameMode() != GameMode.CREATIVE) player.setAllowFlight(false);
         player.setFlying(false);
         player.setGliding(false);
         boosted.remove(player);
         flying.remove(player);
-        if(switchGamemodeCancelSound) {
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_DESTROY, switchGamemodeCancelSoundVolume, switchGamemodeCancelSoundPitch);
-        }
+        if (switchGamemodeCancelSoundSetter)
+            player.playSound(player.getLocation(), actualSwitchGamemodeCancelSound, 10, 2);
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent event) {
-        Entity entity = event.getEntity();
-        if ((entity.getType() == EntityType.PLAYER)
-        && (event.getCause() == EntityDamageEvent.DamageCause.FALL || event.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL)
-        && flying.contains(entity))
+    public void onDamage(final EntityDamageEvent event) {
+        final Entity entity = event.getEntity();
+        final boolean isPlayer = entity.getType() == EntityType.PLAYER;
+        final boolean isFlyingDamage = event.getCause() == EntityDamageEvent.DamageCause.FALL || event.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL;
+
+        if (isPlayer && isFlyingDamage && flying.contains(entity)) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onSwapItem(final PlayerSwapHandItemsEvent event) {
+        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
+        if (boosted.contains(event.getPlayer()) && !isInSpawnRadius(event.getPlayer())) return;
+
+        final boolean isPlayerOnGround = !event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir();
+        final boolean infiniteBoost = isInSpawnRadius(event.getPlayer()) && isPlayerOnGround;
+        final boolean normalBoost = flying.contains(event.getPlayer()) && !isPlayerOnGround;
+
+        if (!infiniteBoost && !normalBoost) return;
+        event.setCancelled(true);
+        boostPlayer(event.getPlayer(), true);
+        if (!infiniteBoost) boosted.add(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onToggleGlide(final EntityToggleGlideEvent event) {
+        if (event.getEntity().getType() == EntityType.PLAYER && flying.contains(event.getEntity()))
             event.setCancelled(true);
     }
 
-    @EventHandler
-    public void onSwapItem(PlayerSwapHandItemsEvent event) {
-        if(event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
-        if(boosted.contains(event.getPlayer()) && !isInSpawnRadius(event.getPlayer())) return;
-        if((flying.contains(event.getPlayer()) && event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir())
-            ||(isInSpawnRadius(event.getPlayer()) && !event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()))
-        {
-            event.setCancelled(true);
-            if(event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir() || isInSpawnRadius(event.getPlayer())) boosted.add(event.getPlayer());
-            boostPlayer(event.getPlayer(), true);
-        }
+    private boolean isInSpawnRadius(final Player player) {
+        if (!player.getWorld().getName().equals(world)) return false;
+
+        final double distance = player.getWorld().getSpawnLocation().distance(player.getLocation());
+
+        return distance < spawnRadius;
     }
 
-    @EventHandler
-    public void onToggleGlide(EntityToggleGlideEvent event) {
-        Entity entity = event.getEntity();
-        if (entity.getType() == EntityType.PLAYER && flying.contains(entity)) event.setCancelled(true);
+    public void boostPlayer(final Player player, final boolean isBoost) {
+        final float boosMultiplier = isBoost ? flyBoostMultiplier : startBoostMultiplier;
+        player.setVelocity(player.getLocation().getDirection().multiply(boosMultiplier));
+
+        if (boostSoundSetter)
+            player.playSound(player.getLocation(), actualBoostSound, 10, 2);
     }
 
-    private boolean isInSpawnRadius(Player player) {
-        if(!player.getWorld().getName().equals(world)) return false;
-        return  player.getWorld().getSpawnLocation().distance(player.getLocation()) < spawnRadius;
-    }
+    public void loadInConfig(FileConfiguration config) {
 
-    public void boostPlayer(Player player, boolean isBoost) {
-        if (isBoost) {
-            player.setVelocity(player.getLocation().getDirection().multiply(flyBoostMultiplier));
-        }
-        else player.setVelocity(player.getLocation().getDirection().multiply(startBoostMultiplier));
-        if(boostSound) {
-            player.playSound(player.getLocation(), Sound.ENTITY_BREEZE_WIND_BURST, boostSoundVolume, boostSoundPitch);
-        }
+        this.flyBoostMultiplier = config.getInt("flyBoostMultiplier");
+        this.spawnRadius = config.getInt("spawnRadius");
+        this.startBoostMultiplier = config.getInt("startBoostMultiplier");
+        this.world = config.getString("world");
+        this.boostSoundSetter = config.getBoolean("boostSoundSetter");
+        this.boostSound = config.getString("boostSound");
+        this.switchGamemodeCancelSoundSetter = config.getBoolean("switchGamemodeCancelSoundSetter");
+        this.switchGamemodeCancelSound = config.getString("switchGamemodeCancelSound");
+        this.particle = config.getBoolean("particle");
     }
 }
