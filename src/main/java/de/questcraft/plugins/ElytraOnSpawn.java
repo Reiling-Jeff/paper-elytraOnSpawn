@@ -23,24 +23,30 @@ public final class ElytraOnSpawn extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // TODO make more Logs on startup
         log.info("ElytraOnSpawn is starting...");
 
         log.info("Loading config...");
         saveDefaultConfig();
         loadConfig();
+        log.info("Config loaded successfully.");
+
+        log.info("Performing config check...");
         configCheck();
+        log.info("Config check completed.");
 
-        log.info("nitialize sounds...");
+        log.info("Initializing sounds...");
         SoundMapper.initialize();
+        log.info("Sounds initialized successfully.");
 
-        log.info("Loading elytraOnSpawn events...");
-        getServer().getPluginManager().registerEvents(new SpawnBoostListener(this,config), this);
+        log.info("Registering ElytraOnSpawn events...");
+        getServer().getPluginManager().registerEvents(new SpawnBoostListener(this, config), this);
+        log.info("Events registered successfully.");
 
-        log.info("Loading elytraOnSpawn commands...");
+        log.info("Registering ElytraOnSpawn commands...");
         getCommand("elytraOnSpawn").setExecutor(new ElytraOnSpawnCommand(this));
+        log.info("Commands registered successfully.");
 
-        log.info("ElytraOnSpawn is ready!");
+        log.info("ElytraOnSpawn is now fully operational!");
     }
 
     public void loadConfig() {
