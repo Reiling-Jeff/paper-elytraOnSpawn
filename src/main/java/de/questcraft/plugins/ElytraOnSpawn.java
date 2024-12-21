@@ -70,8 +70,6 @@ public final class ElytraOnSpawn extends JavaPlugin {
     }
 
     public void configCheck() {
-        log.info("Performing config check...");
-
         verbose = config.getBoolean("verbose", true);
         log.info("Verbose mode: " + verbose);
 
