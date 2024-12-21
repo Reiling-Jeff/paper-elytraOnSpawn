@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO TabCompleter for ElytraOnSpawnCommand
 public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
     private final ElytraOnSpawn plugin;
     private final FileConfiguration config;
