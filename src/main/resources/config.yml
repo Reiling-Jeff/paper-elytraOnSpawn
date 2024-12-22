@@ -1,4 +1,4 @@
-verbose: true # for idiots
+verbose: true
 
 spawnRadius: 40
 flyBoostMultiplier: 2
@@ -14,3 +14,10 @@ switchGamemodeCancelSoundSetter: true
 switchGamemodeCancelSound: block.anvil.destroy
 
 particle: true
+
+# elytra activation mode
+doubleJump: true
+fall: false
+
+#fall mode settings
+fallThreshold: 2

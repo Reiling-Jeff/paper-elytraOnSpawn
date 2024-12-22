@@ -45,6 +45,7 @@ public class SpawnBoostListener implements Listener {
 
         actualBoostSound = SoundMapper.getSound(boostSound);
         actualSwitchGamemodeCancelSound = SoundMapper.getSound(switchGamemodeCancelSound);
+        this.fallThreshold = config.getInt("fallThreshold");
 
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             Bukkit.getWorld(world).getPlayers().forEach(player -> {
@@ -87,6 +88,19 @@ public class SpawnBoostListener implements Listener {
         final Player player = event.getPlayer();
         if (player.isGliding() && flying.contains(player) && particle)
             player.getWorld().spawnParticle(Particle.FLAME, player.getLocation(), 3, 0, 0, 0, 0.05);
+        if (!fallMode) {
+            return;
+        }
+
+        double fallDistance = player.getFallDistance();
+
+        if (fallDistance >= fallThreshold) {
+            if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
+            if (!isInSpawnRadius(event.getPlayer())) return;
+
+            event.getPlayer().setGliding(true);
+            flying.add(event.getPlayer());
+        }
     }
 
     @EventHandler
@@ -158,5 +172,6 @@ public class SpawnBoostListener implements Listener {
         this.switchGamemodeCancelSoundSetter = config.getBoolean("switchGamemodeCancelSoundSetter");
         this.switchGamemodeCancelSound = config.getString("switchGamemodeCancelSound");
         this.particle = config.getBoolean("particle");
+        this.fallMode = config.getBoolean("fall");
     }
 }
