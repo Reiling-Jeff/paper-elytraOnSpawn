@@ -27,21 +27,6 @@ This plugin is perfect for players who love exploring the skies or getting from 
 - Switch items in your offhand (default: "F") to boost.
 - Adjust settings via `config.yml` or commands for further customization.
 
-# ElytraOnSpawn
-
-Ever dreamed of soaring through the skies with an Elytra right after spawning? With the "ElytraOnSpawn" plugin, that dream becomes reality! This plugin automatically equips you with an Elytra when you spawn or respawn, without replacing your armor. It's the perfect addition for your SMP server and works seamlessly with most other plugins.
-
-## Features
-
-- **Automatic Elytra on Spawn**: Receive an (invisible) Elytra when you spawn or respawn in the designated world.
-- **Boost with Offhand Items**: Switch items in your offhand and press "F" (default key) to boost through the air.
-- **Fancy Particles**: Enjoy stylish particle effects while flying.
-- **Highly Configurable**: Adjust settings through the `config.yml` or in-game commands to personalize the experience.
-- **Multiverse Support**: Server admins can specify which world the plugin should operate in.
-- **Ease of Use**: Just install the plugin, set your world spawn with `/setworldspawn`, and you're ready to fly!
-
-This plugin is perfect for players who love exploring the skies or getting from point A to B faster while enjoying a unique flying experience.
-
 ## Commands
 
 | Command                          | Description                                                                 |
