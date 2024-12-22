@@ -24,19 +24,21 @@ import java.util.List;
 
 public class SpawnBoostListener implements Listener {
 
-    private float flyBoostMultiplier;
-    private int spawnRadius;
-    private String world;
-    private float startBoostMultiplier;
-    private boolean boostSoundSetter;
-    private String boostSound;
-    private final Sound actualBoostSound;
-    private boolean switchGamemodeCancelSoundSetter;
-    private String switchGamemodeCancelSound;
-    private final Sound actualSwitchGamemodeCancelSound;
-    private boolean particle;
-    private final List<Entity> flying = new ArrayList<>();
-    private final List<Player> boosted = new ArrayList<>();
+    public float flyBoostMultiplier;
+    public static int spawnRadius;
+    public static String world;
+    public float startBoostMultiplier;
+    public boolean boostSoundSetter;
+    public String boostSound;
+    public final Sound actualBoostSound;
+    public boolean switchGamemodeCancelSoundSetter;
+    public String switchGamemodeCancelSound;
+    public final Sound actualSwitchGamemodeCancelSound;
+    public boolean particle;
+    public boolean fallMode;
+    public static final List<Entity> flying = new ArrayList<>();
+    public final List<Player> boosted = new ArrayList<>();
+    public final int fallThreshold;
 
     public SpawnBoostListener(final Plugin plugin, FileConfiguration config) {
         loadInConfig(config);
@@ -129,7 +131,7 @@ public class SpawnBoostListener implements Listener {
             event.setCancelled(true);
     }
 
-    private boolean isInSpawnRadius(final Player player) {
+    static boolean isInSpawnRadius(final Player player) {
         if (!player.getWorld().getName().equals(world)) return false;
 
         final double distance = player.getWorld().getSpawnLocation().distance(player.getLocation());
