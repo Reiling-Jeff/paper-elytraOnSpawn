@@ -78,6 +78,7 @@ public class SpawnBoostListener implements Listener {
         if (!isInSpawnRadius(event.getPlayer())) return;
         event.setCancelled(true);
 
+        if (!doubleJumpMode) return;
         event.getPlayer().setGliding(true);
         boostPlayer(event.getPlayer(), false);
         flying.add(event.getPlayer());
