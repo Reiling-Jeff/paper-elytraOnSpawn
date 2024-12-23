@@ -35,6 +35,7 @@ public class SpawnBoostListener implements Listener {
     public String switchGamemodeCancelSound;
     public final Sound actualSwitchGamemodeCancelSound;
     public boolean particle;
+    public boolean doubleJumpMode;
     public boolean fallMode;
     public static final List<Entity> flying = new ArrayList<>();
     public final List<Player> boosted = new ArrayList<>();
@@ -173,6 +174,7 @@ public class SpawnBoostListener implements Listener {
         this.switchGamemodeCancelSoundSetter = config.getBoolean("switchGamemodeCancelSoundSetter");
         this.switchGamemodeCancelSound = config.getString("switchGamemodeCancelSound");
         this.particle = config.getBoolean("particle");
+        this.doubleJumpMode = config.getBoolean("doubleJump");
         this.fallMode = config.getBoolean("fall");
     }
 }
