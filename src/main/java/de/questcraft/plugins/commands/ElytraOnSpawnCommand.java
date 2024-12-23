@@ -20,7 +20,6 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
     private final FileConfiguration config;
     private final File configFile;
 
-    private final List<String> mainCommands = Arrays.asList("config", "conf", "reload");
     private final List<String> configCommands = Arrays.asList("reset", "check");
     private final List<String> configKeys = Arrays.asList(
             "verbose",
