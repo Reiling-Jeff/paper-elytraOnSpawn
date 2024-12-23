@@ -31,7 +31,10 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
             "boostsound",
             "switchgamemodecancelsoundsetter",
             "switchgamemodecancelsound",
-            "particle"
+            "particle",
+            "doubleJump",
+            "fall",
+            "fallThreshold"
     );
     private final List<String> allCommands = Arrays.asList("help", "reload", "config");
 
@@ -225,11 +228,11 @@ public class ElytraOnSpawnCommand implements CommandExecutor, TabCompleter {
 
     private boolean parseSecondArgument(CommandSender sender, String firstArgument, String secondArgument) {
         switch (firstArgument.toLowerCase()) {
-            case "verbose", "boostsoundsetter", "switchgamemodecancelsoundsetter", "particle":
+            case "verbose", "boostsoundsetter", "switchgamemodecancelsoundsetter", "particle", "doublejump", "fall":
                 boolean boolValue = Boolean.parseBoolean(secondArgument);
                 plugin.setConfigValue(config, firstArgument, boolValue);
                 break;
-            case "spawnradius":
+            case "spawnradius", "fallthreshold":
                 int intValue = Integer.parseInt(secondArgument);
                 plugin.setConfigValue(config, firstArgument, intValue);
                 break;
