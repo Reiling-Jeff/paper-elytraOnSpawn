@@ -128,8 +128,6 @@ public class SpawnBoostListener implements Listener {
 
     @EventHandler
     public void onSwapItem(final PlayerSwapHandItemsEvent event) {
-        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
-        if (boosted.contains(event.getPlayer()) && !isInSpawnRadius(event.getPlayer())) return;
         Player player = event.getPlayer();
         if (player.getGameMode() != GameMode.SURVIVAL) return;
         if (boosted.contains(player) && !isInSpawnRadius(player)) return;
