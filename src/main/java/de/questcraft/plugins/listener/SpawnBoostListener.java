@@ -130,15 +130,21 @@ public class SpawnBoostListener implements Listener {
     public void onSwapItem(final PlayerSwapHandItemsEvent event) {
         if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
         if (boosted.contains(event.getPlayer()) && !isInSpawnRadius(event.getPlayer())) return;
+        Player player = event.getPlayer();
+        if (player.getGameMode() != GameMode.SURVIVAL) return;
+        if (boosted.contains(player) && !isInSpawnRadius(player)) return;
 
-        final boolean isPlayerOnGround = !event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir();
-        final boolean infiniteBoost = isInSpawnRadius(event.getPlayer()) && isPlayerOnGround;
-        final boolean normalBoost = flying.contains(event.getPlayer()) && !isPlayerOnGround;
+        boolean isPlayerOnGround = !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir();
+        final boolean infiniteBoost = isInSpawnRadius(player) &&
+            (isPlayerOnGround || (fallMode && player.getFallDistance() >= fallThreshold));
+
+
+        final boolean normalBoost = flying.contains(player) && !isPlayerOnGround;
 
         if (!infiniteBoost && !normalBoost) return;
         event.setCancelled(true);
-        boostPlayer(event.getPlayer(), true);
-        if (!infiniteBoost) boosted.add(event.getPlayer());
+        boostPlayer(player, true);
+        if (!infiniteBoost) boosted.add(player);
     }
 
     @EventHandler
