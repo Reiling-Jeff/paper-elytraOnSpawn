@@ -1,23 +1,43 @@
+# Enable verbose mode for additional debugging output (default is true)
 verbose: true
 
+# Limit the radius from spawn within which players can use the elytra (default is 40 blocks)
 spawnRadius: 40
+
+# Multiply flight speed, simulating the effect of using more powerful rockets/fireworks (default is 2)
 flyBoostMultiplier: 2
+
+# Multiplier for initial takeoff speed when activating elytra (default is 1.2)
 startBoostMultiplier: 1.2
+
+# Specify the world where the plugin is enabled (default is world)
 world: world
 
+# Enable or disable the boost sound effect (default is true)
 boostSoundSetter: true
-# if boostSoundSetter is "true"
+
+# Bukkit sound key to use when boosting (default is entity.breeze.wind.burst)
+# Internally converts the Vanilla dot notation used here (e.g., entity.breeze.wind.burst) to Bukkit API key
+# Example: "ENTITY_BREEZE_WIND_BURST" -> "entity.breeze.wind.burst"
+# Bukkit sound docs:
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/class-use/Sound.html
 boostSound: entity.breeze.wind.burst
 
+# Enable or disable the sound effect when canceling flight with gamemode switch (default is true)
 switchGamemodeCancelSoundSetter: true
-# if swiitchGamemodeCancelSoundSetter is "true"
+
+# Bukkit sound key to use when canceling flight with gamemode switch (default is block.anvil.destroy)
+# Internally converts Vanilla dot notation to Bukkit API key
 switchGamemodeCancelSound: block.anvil.destroy
 
+# Show particles during flight (default is true)
 particle: true
 
-# elytra activation mode
+# Activate elytra on double jump (default is true)
 doubleJump: true
+
+# Activate elytra when falling
 fall: false
 
-#fall mode settings
+# Minimum fall distance to trigger activation of elytra when falling (in blocks) (default is 2)
 fallThreshold: 2
